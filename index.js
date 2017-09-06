@@ -170,18 +170,24 @@ module.exports = function(app) {
       keys: [
         'navigation.datetime', 'navigation.speedOverGround', 'navigation.courseOverGroundTrue', 'navigation.position'
       ],
+      defaults: [
+        "", undefined, undefined, undefined
+      ]
       f: function(datetime8601, sog, cog, position) {
-        var datetime = new Date(datetime8601);
-        var hours = ('00' + datetime.getHours()).slice(-2);
-        var minutes = ('00' + datetime.getMinutes()).slice(-2);
-        var seconds = ('00' + datetime.getSeconds()).slice(-2);
+        let time = ''
+        if (datetime8601.length > 0) {
+          var datetime = new Date(datetime8601);
+          var hours = ('00' + datetime.getHours()).slice(-2);
+          var minutes = ('00' + datetime.getMinutes()).slice(-2);
+          var seconds = ('00' + datetime.getSeconds()).slice(-2);
 
-        var day = ('00' +datetime.getUTCDate()).slice(-2);
-        var month = ('00' +(datetime.getUTCMonth() + 1)).slice(-2); //months from 1-12
-        var year = ('00' +datetime.getUTCFullYear()).slice(-2);
-
+          var day = ('00' +datetime.getUTCDate()).slice(-2);
+          var month = ('00' +(datetime.getUTCMonth() + 1)).slice(-2); //months from 1-12
+          var year = ('00' +datetime.getUTCFullYear()).slice(-2);
+          time = hours + minutes + seconds
+        }
         return toSentence([
-          '$SKRMC', hours + minutes + seconds,
+          '$SKRMC', time,
           'A',
           // Force 4 digits before decimal point and 4 digits after
           ('0000' + ((toNmeaDegrees(position.latitude)*1).toFixed(4))).slice(-9),
